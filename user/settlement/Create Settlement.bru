@@ -1,0 +1,20 @@
+meta {
+  name: Create Settlement
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://127.0.0.1:3000/settlements
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "pago1",
+    "fromGroupMemberId": 2,
+    "toGroupMemberId": 1,
+    "amount": 100.00
+  }
+}

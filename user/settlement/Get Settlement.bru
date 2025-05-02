@@ -1,0 +1,20 @@
+meta {
+  name: Get Settlement
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://127.0.0.1:3000/settlements/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "pago1",
+    "fromGroupMemberId": 1,
+    "toGroupMemberId": 1,
+    "amount": 10.00
+  }
+}

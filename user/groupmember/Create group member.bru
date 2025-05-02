@@ -1,0 +1,18 @@
+meta {
+  name: Create group member
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://127.0.0.1:3000/groupMembers
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "userId": 1,
+    "groupId": 1
+  }
+}
