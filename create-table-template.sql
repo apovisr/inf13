@@ -1,12 +1,12 @@
 use exampledb;
 
-create table User(
+create table `user`(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE
 );
 
-create table group(
+create table `group`(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(80) NOT NULL,
     description VARCHAR(100)
@@ -30,7 +30,6 @@ alter table `groupMember`
     add constraint unique_user_group
         unique (userId, groupId);
 
-drop table settlement;
 
 create table settlement(
     id INT PRIMARY KEY AUTO_INCREMENT,

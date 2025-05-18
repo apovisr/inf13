@@ -18,8 +18,8 @@ export class GroupService {
 
 
 
-  async getGroup(id: number): Promise<GroupDto> {
-      return this.groupRepository.findOneOrFail({ where: { id } });
+  async getGroup(id: number): Promise<GroupDto|null> {
+      return this.groupRepository.findOne({ where: { id } });
   }
 
   async getAllGroup(): Promise<GroupDto[]> {

@@ -8,12 +8,12 @@ export class GroupController {
   constructor(private readonly appService: GroupService) { }
 
   @Get(':id')
-  async getGroup(@Param('id') id: number): Promise<GroupDto> {
+  async getGroup(@Param('id') id: number): Promise<GroupDto|null> {
     const groupDto = await this.appService.getGroup(id);
     if (groupDto) {
       return groupDto;
     } else {
-      throw new NotFoundException('Expense not found');
+      throw new NotFoundException('Group not found');
     }
   }
 
