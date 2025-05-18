@@ -29,6 +29,9 @@ jobs:
       - name: Verificar las credenciales
         run: aws sts get-caller-identity
 
+      - name: Build npm
+        run: npm install
+
       - name: Construir la imagen docker
         run: docker build -t split-wise .
 
