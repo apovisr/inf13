@@ -13,12 +13,18 @@ export class UserController {
     if(user){
       return user;
     }
-    throw new NotFoundException('Invalid user');
+    throw new NotFoundException('User not found');
+  }
+
+
+  @Get()
+  async getAllUsers(): Promise<UserDto[]> {
+    return this.appService.getAllUsers();
   }
 
   @Post()
   @HttpCode(201)
   async createUser(@Body() createUser: CreateUserDto) {
-    this.appService.createUser(createUser);
+    await this.appService.createUser(createUser);
   }
 }

@@ -1,20 +1,28 @@
-import { Inject, Injectable } from "@nestjs/common/decorators";
+import { Injectable } from "@nestjs/common/decorators";
 import { Repository } from "typeorm";
 import { Group } from "./entity/group.entity";
 import { CreateGroupDto, GroupDto } from "./dto/group.dto";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class GroupService {
-  async createGroup(createGroup: CreateGroupDto){
-    await this.GroupRepository.save(createGroup);
-  }
 
   constructor(
-    @Inject('GROUP_REPOSITORY')
-    private GroupRepository: Repository<Group>,
+    @InjectRepository(Group)
+    private groupRepository: Repository<Group>,
   ) {}
+  
+  async createGroup(createGroup: CreateGroupDto){
+    await this.groupRepository.save(createGroup);
+  }
 
-  async getGroup(id: number): Promise<Group> {
-      return this.GroupRepository.findOneOrFail({ where: { id } });
+
+
+  async getGroup(id: number): Promise<GroupDto> {
+      return this.groupRepository.findOneOrFail({ where: { id } });
+  }
+
+  async getAllGroup(): Promise<GroupDto[]> {
+    return this.groupRepository.find();
   }
 }

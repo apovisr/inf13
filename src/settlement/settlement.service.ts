@@ -4,17 +4,23 @@ import { Repository } from "typeorm";
 import { CreateSettlementDto, SettlementDto } from "./dto/settlement.dto";
 import { GroupMember } from "src/groupmember/entity/group-meber.entity";
 import { User } from "src/user/entity/user.entity";
+import { GroupMemberService } from "src/groupmember/group-member.service";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class SettlementService {
 
 
   constructor(
-    @Inject('SETTLEMENT_REPOSITORY')
+    @InjectRepository(Settlement)
     private settlementRepository: Repository<Settlement>,
+    @Inject()
+    private groupMemberService: GroupMemberService,
   ) { }
 
   async createSettlement(createSettlement: CreateSettlementDto) {
+    await this.groupMemberService.validateGroupMembers([createSettlement.fromGroupMemberId, createSettlement.toGroupMemberId], createSettlement.groupId);
+
     const settlement: Settlement = {
       ...createSettlement,
       createdAt: new Date(),
@@ -30,7 +36,7 @@ export class SettlementService {
       .innerJoinAndSelect(User, 'fromUser', 'fromUser.id = fromGroupMember.userId')
       .innerJoinAndSelect(User, 'toUser', 'toUser.id = toGroupMember.userId')
       .where('settlement.id = :id', { id })
-      .select(['settlement.id as id','settlement.name as name', 'fromGroupMember.id as fromGroupMemberId', 'toGroupMember.id as toGroupMemberId', 'fromUser.name as fromUserName', 'toUser.name as toUserName', 'settlement.amount as amount', 'settlement.createdAt as createdAt'])
+      .select(['settlement.id as id', 'settlement.name as name', 'fromGroupMember.id as fromGroupMemberId', 'toGroupMember.id as toGroupMemberId', 'fromUser.name as fromUserName', 'toUser.name as toUserName', 'settlement.amount as amount', 'settlement.createdAt as createdAt'])
       .getRawOne<SettlementHelper>();
 
     if (settlement) {
@@ -65,9 +71,9 @@ export class SettlementService {
       .innerJoinAndSelect(User, 'toUser', 'toUser.id = toGroupMember.userId')
       .where('fromGroupMember.groupId = :id', { id })
       .andWhere('toGroupMember.groupId = :id', { id })
-      .select(['settlement.id as id','settlement.name as name', 'fromGroupMember.id as fromGroupMemberId', 'toGroupMember.id as toGroupMemberId', 'fromUser.name as fromUserName', 'toUser.name as toUserName', 'settlement.amount as amount', 'settlement.createdAt as createdAt'])
+      .select(['settlement.id as id', 'settlement.name as name', 'fromGroupMember.id as fromGroupMemberId', 'toGroupMember.id as toGroupMemberId', 'fromUser.name as fromUserName', 'toUser.name as toUserName', 'settlement.amount as amount', 'settlement.createdAt as createdAt'])
       .getRawMany<SettlementHelper>();
-    
+
     return settlements.map(e => this.mapperToDto(e));
   }
 }

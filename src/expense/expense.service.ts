@@ -6,14 +6,14 @@ import { ExpenseSplit } from "./entity/expense-split.entity";
 import { GroupMember } from "src/groupmember/entity/group-meber.entity";
 import { User } from "src/user/entity/user.entity";
 import { GroupMemberService } from "src/groupmember/group-member.service";
-import { BadRequestException } from "@nestjs/common/exceptions";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class ExpenseService {
 	constructor(
-		@Inject('EXPENSE_REPOSITORY')
+		@InjectRepository(Expense)
 		private expenseRepository: Repository<Expense>,
-		@Inject('EXPENSE_SPLIT_REPOSITORY')
+		@InjectRepository(ExpenseSplit)
 		private expenseSplitRepository: Repository<ExpenseSplit>,
 		@Inject()
 		private groupMemberService: GroupMemberService,
@@ -23,7 +23,7 @@ export class ExpenseService {
 	async createExpense(createExpenseDto: CreateExpenseDto) {
 		const groupMemberIds = createExpenseDto.expenseSplits.map(e => e.groupMemberId)
 		
-		await this.groupMemberService.validateGroupMembers(groupMemberIds);
+		await this.groupMemberService.validateGroupMembers(groupMemberIds, createExpenseDto.groupId);
 
 		await this.expenseRepository.manager.transaction(
 			async (transactionalEntityManager) => {

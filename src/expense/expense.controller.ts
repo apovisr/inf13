@@ -10,12 +10,17 @@ export class ExpenseController {
 	@Post()
 	@HttpCode(201)
 	async createExpense(@Body() createExpenseDto: CreateExpenseDto) {
-		this.expenseService.createExpense(createExpenseDto);
+		await this.expenseService.createExpense(createExpenseDto);
 	}
 
 	@Get(':id')
 	async getExpense(@Param('id') id: number): Promise<ExpenseDto | undefined> {
-		return this.expenseService.getExpense(id);
+		const expenseDto = await this.expenseService.getExpense(id);
+		if(expenseDto){
+			return expenseDto;
+		} else {
+			throw new NotFoundException('Expense not found');
+		}
 	}
 
 

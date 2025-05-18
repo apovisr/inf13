@@ -3,6 +3,7 @@ import { GroupMemberDto } from "src/groupmember/dto/group-member.dto";
 export interface CreateExpenseDto {
     readonly name: string;
     readonly groupMemberId: number;
+    readonly groupId: number
     readonly totalAmount: number;
     readonly expenseSplits: CreateExpenseSplitDto[];
 }

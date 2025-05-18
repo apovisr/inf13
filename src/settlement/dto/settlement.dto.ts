@@ -4,6 +4,7 @@ export interface  CreateSettlementDto{
     readonly name: string;
     readonly fromGroupMemberId: number;
     readonly toGroupMemberId: number;
+    readonly groupId: number
     readonly amount: number;
 }
 
