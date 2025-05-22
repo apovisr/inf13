@@ -1,0 +1,42 @@
+name: Construir y Desplegar a AWS
+
+on:
+  workflow_dispatch:
+    inputs:
+      toggle_list:
+        description: 'Lista de toggles a activar JSON'
+        required: true
+        default: '[]'
+        type: string
+
+      environment:
+        description: 'Entorno a desplegar'
+        required: true
+        default: 'dev'
+        type: string
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: main
+
+    steps:
+      - name: Recuperar el código
+        uses: actions/checkout@v3
+
+      - name: Modify toogles
+        run: |
+          echo "Modificando el archivo de toggles"
+          echo "${{ github.event.inputs.toggle_list }}" | jq -r '.[] | [.name, .enabled] | join(",")'| 
+          while IFS= read -r value; do
+            read name action <<< $value
+            python file.py $action ${{ name == 'enable' && 'on' || 'off' }}
+          done
+      - name: unleash
+        run: |
+          echo "Desplegando a Unleash"
+          echo "${{ github.event.inputs.toggle_list }}" | jq -r '.[] | [.name, .enabled] | join(",")'| 
+          while IFS= read -r value; do
+            read name action <<< $value
+            echo "Desplegando el toggle $name con el valor $action"
+            curl -X POST "https://unleash.splitwise.com/api/admin/features/$name/environment/${{ action=='enable' && 'on' || 'off' }}"
+          done
