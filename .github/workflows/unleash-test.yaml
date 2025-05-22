@@ -36,5 +36,5 @@ jobs:
           while IFS= read -r value; do
             read name action <<< $value
             echo "Desplegando el toggle $name con el valor $action"
-            curl -X POST "https://unleash.splitwise.com/api/admin/features/$name/environment/$(( action=='enable' && 'on' || 'off' ))"
+            echo "https://unleash.splitwise.com/api/admin/features/$name/environment/$([[ $action =='enable' ]] && echo 'true' || echo 'false')"
           done
