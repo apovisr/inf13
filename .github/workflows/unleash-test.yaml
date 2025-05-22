@@ -25,7 +25,6 @@ jobs:
 
       - name: Modify toogles
         run: |
-          echo "Modificando el archivo de toggles";
           echo "${{ github.event.inputs.toggle_list }}" | jq -r '.[] | [.name, .action] | join(",")' | while IFS= read -r value; do
             read name action <<< $value
             echo "Desplegando el toggle $name con el valor $action"
