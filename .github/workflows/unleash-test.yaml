@@ -29,7 +29,7 @@ jobs:
           echo "${{ github.event.inputs.toggle_list }}" | jq -r '.[] | [.name, .action] | join(",")'| 
           while IFS= read -r value; do
             read name action <<< $value
-            python file.py $name (( $action == 'enable' && 'on' || 'off' ))
+            
           done
       - name: unleash
         run: |
@@ -38,5 +38,5 @@ jobs:
           while IFS= read -r value; do
             read name action <<< $value
             echo "Desplegando el toggle $name con el valor $action"
-            curl -X POST "https://unleash.splitwise.com/api/admin/features/$name/environment/(( action=='enable' && 'on' || 'off' ))"
+            curl -X POST "https://unleash.splitwise.com/api/admin/features/$name/environment/$(( action=='enable' && 'on' || 'off' ))"
           done
