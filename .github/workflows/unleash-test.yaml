@@ -24,16 +24,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Modify toogles
-        run: >
-          echo "Modificando el archivo de toggles"
-          echo "${{ github.event.inputs.toggle_list }}" | jq -r '.[] | [.name, .action] | join(",")'| 
-          while IFS= read -r value; do
+        run: |
+          echo "Modificando el archivo de toggles";
+          echo "${{ github.event.inputs.toggle_list }}" | jq -r '.[] | [.name, .action] | join(",")' | while IFS= read -r value; do
             read name action <<< $value
-            
+            echo "Desplegando el toggle $name con el valor $action"
           done
       - name: unleash
-        run: >
-          echo "Desplegando a Unleash"
+        run: |
           echo "${{ github.event.inputs.toggle_list }}" | jq -r '.[] | [.name, .action] | join(",")' | 
           while IFS= read -r value; do
             read name action <<< $value
