@@ -7,19 +7,18 @@ Distribuye los gastos de un grupo
 - nodejs (https://nodejs.org/en)
 - bruno (https://www.usebruno.com/)
 
-# Instalacion de dependencias
-```
-npm install
-```
-
-# Levantar dependencias con docker
+# Crear y levantar base de datos en docker con docker
 ```
 docker compose up
 ```
 
-# Crear tablas
+# Crear tablas en la base de datos de docker
 Ejecutar el archivo `db.scripts.sql` en el contenedor de mysql 
 
+# Instalacion de dependencias del proyecto
+```
+npm install
+```
 
 # Levantar proyecto
 ```
