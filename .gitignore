@@ -1,6 +1,7 @@
 # compiled output
 /dist
 /node_modules
+**/node_modules
 /build
 
 # Logs
@@ -48,3 +49,16 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Zip files
+*.zip
+
+# Terraform
+/infra/*.hcl
+# Terraform state files
+*.tfstate
+*.tfstate.backup
+# Terraform plan files
+*.tfplan
+# Terraform variables files
+/infra/.terraform
