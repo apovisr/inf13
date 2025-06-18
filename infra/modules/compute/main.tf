@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "definicion_tarea_split_wise" {
         essential = true,
         portMappings = [
             {
-                containerPort = 8080,
+                containerPort = 3000,
                 protocol = "tcp"
             }
         ],
@@ -88,7 +88,7 @@ resource "aws_ecs_service" "servicio_split_wise" {
     load_balancer {
         target_group_arn = aws_lb_target_group.tg_split_wise.arn
         container_name   = "split-wise"
-        container_port   = 8080
+        container_port   = 3000
     }
 
     network_configuration {
@@ -143,13 +143,13 @@ resource "aws_lb" "split_wise_load_balancer" {
 
 resource "aws_lb_target_group" "tg_split_wise" {
   name     = "tg-split-wise"
-  port     = 8080
+  port     = 3000
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.vpc_por_defecto.id
   target_type = "ip"
 
   health_check {
-    path                = "/"
+    path                = "/api"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2

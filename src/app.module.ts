@@ -12,6 +12,7 @@ import { Group } from './group/entity/group.entity';
 import { Settlement } from './settlement/entity/settlement.entity';
 import { Expense } from './expense/entity/expense.entity';
 import { ExpenseSplit } from './expense/entity/expense-split.entity';
+import { HealthModule } from './health/healt.module';
 
 @Module({
   imports: [ConfigModule.forRoot(),
@@ -29,7 +30,7 @@ import { ExpenseSplit } from './expense/entity/expense-split.entity';
       }),
       inject: [ConfigService],
     }),
-    UserModule, GroupModule, GroupMemberModule, SettlementModule, ExpenseModule
+    UserModule, GroupModule, GroupMemberModule, SettlementModule, ExpenseModule, HealthModule
   ],
 })
 export class AppModule {}
