@@ -30,7 +30,7 @@ resource "aws_apigatewayv2_integration" "expenses_integration_group" {
 resource "aws_apigatewayv2_integration" "groups_integration" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "HTTP_PROXY"
-  integration_uri        = "http://${var.load_balancer_url}/api/groups"
+  integration_uri        = "http://${var.load_balancer_url}/api/groups/{proxy}"
   integration_method     = "ANY"
   payload_format_version = "1.0"
 }
@@ -38,7 +38,7 @@ resource "aws_apigatewayv2_integration" "groups_integration" {
 resource "aws_apigatewayv2_integration" "groups_integration_no_parameters" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "HTTP_PROXY"
-  integration_uri        = "http://${var.load_balancer_url}/api/groups/{proxy}"
+  integration_uri        = "http://${var.load_balancer_url}/api/groups"
   integration_method     = "ANY"
   payload_format_version = "1.0"
 }
@@ -180,7 +180,7 @@ resource "aws_apigatewayv2_route" "producto_get_by_group" {
 #########################################
 resource "aws_apigatewayv2_route" "settlements_get_all" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "GET /settlements"
+  route_key = "POST /settlements"
   target    = "integrations/${aws_apigatewayv2_integration.settlements_integration_no_parameters.id}"
 }
 
@@ -192,7 +192,7 @@ resource "aws_apigatewayv2_route" "settlements_get_by_id" {
 
 resource "aws_apigatewayv2_route" "settlements_post" {
   api_id    = aws_apigatewayv2_api.http_api.id
-  route_key = "POST /settlements"
+  route_key = "GET /settlements/group/{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.settlements_integration_group.id}"
 }
 
