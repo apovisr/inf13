@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common/dec
 import { GroupMemberService } from "./group-member.service";
 import { CreateGroupMemberDto, GroupMemberDto } from "./dto/group-member.dto";
 
-@Controller('groupMembers')
+@Controller('group-members')
 export class GroupMemberController {
   constructor(private readonly groupMemberService: GroupMemberService) {}
 
