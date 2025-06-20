@@ -13,10 +13,12 @@ variable "rol_lab_arn" {
   type        = string
 }
 
+/*
 variable "url_base_servicio" {
   description = "URL base del servicio al que la función Lambda se conectará"
   type        = string
 }
+*/
 
 variable "nombre_cluster_ecs" {
     description = "Nombre del clúster ECS donde se desplegará la tarea"
