@@ -26,7 +26,7 @@ import { HealthModule } from './health/healt.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         entities: [User, GroupMember, Group, Settlement, Expense, ExpenseSplit],
-        synchronize: true,
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
