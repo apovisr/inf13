@@ -27,4 +27,10 @@ export class UserController {
   async createUser(@Body() createUser: CreateUserDto) {
     await this.appService.createUser(createUser);
   }
+
+
+  @Get('not/group/:id')
+  async getUserNotGroupMember(@Param('id') id: number): Promise<UserDto[]> {
+    return  this.appService.getUserNotGroupMember(id);
+  }
 }
