@@ -145,6 +145,11 @@ resource "aws_apigatewayv2_route" "expenses_get_by_id" {
   target    = "integrations/${aws_apigatewayv2_integration.expenses_integration.id}"
 }
 
+resource "aws_apigatewayv2_route" "expenses_delete_by_id" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "DELETE /expenses/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.expenses_integration.id}"
+}
 
 resource "aws_apigatewayv2_route" "expenses_get_by_group" {
   api_id    = aws_apigatewayv2_api.http_api.id
@@ -164,6 +169,12 @@ resource "aws_apigatewayv2_route" "groups_get_all" {
 resource "aws_apigatewayv2_route" "groups_get_by_id" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "GET /groups/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.groups_integration.id}"
+}
+
+resource "aws_apigatewayv2_route" "groups_update_by_id" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "PATCH /groups/{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.groups_integration.id}"
 }
 
@@ -223,6 +234,12 @@ resource "aws_apigatewayv2_route" "users_get_all" {
 resource "aws_apigatewayv2_route" "users_get_by_id" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "GET /users/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.users_integration.id}"
+}
+
+resource "aws_apigatewayv2_route" "users_delete_by_id" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "DELETE /users/{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.users_integration.id}"
 }
 

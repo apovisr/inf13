@@ -26,6 +26,18 @@ export class GroupMemberService {
       .getRawMany<GroupMemberDto>();
   }
 
+  async getGroupMemberById(id: number): Promise<GroupMemberDto> {
+    const groupMember = await this.groupMemberRepository.createQueryBuilder('groupMember')
+    .innerJoinAndSelect(User, 'user', 'user.id = groupMember.userId')
+    .where('groupMember.id = :groupMemberId', { groupMemberId: id })
+    .select(['groupMember.id as id', 'user.name as name', 'user.id as userId'])
+    .getRawMany<GroupMemberDto>();
+    if(groupMember.length === 0) {
+      throw new BadRequestException('Group member not found');
+    }
+    return groupMember[0];
+  }
+
   async validateGroupMembers(groupMemberIds: number[], groupId: number) {
     const count = await this.groupMemberRepository
     .createQueryBuilder('groupMember')

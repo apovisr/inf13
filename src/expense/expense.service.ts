@@ -10,6 +10,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class ExpenseService {
+
 	constructor(
 		@InjectRepository(Expense)
 		private expenseRepository: Repository<Expense>,
@@ -59,12 +60,13 @@ export class ExpenseService {
 
 		const expenseSplitDtos = expenseSplits.map(e => this.mapToDto(e));
 
+		const paidByGroupMember = await this.groupMemberService.getGroupMemberById(expense.groupMemberId);
 		return {
 			id: expense.id,
 			name: expense.name,
 			createdAt: expense.createdAt,
 			totalAmount: expense.totalAmount,
-			paidByGroupMember: expenseSplitDtos.find(e => e.member.id === expense.groupMemberId)?.member,
+			paidByGroupMember: paidByGroupMember,
 			expenseSplits: expenseSplitDtos
 		} as ExpenseDto;
 	}
@@ -99,18 +101,21 @@ export class ExpenseService {
 				'expenseSplit.amount as amount', 'expenseSplit.expenseId as expenseId'])
 			.getRawMany<ExpenseSplitHelper>();
 
-		const expenseSplitDtos = expenseSplits.map(e => this.mapToDto(e));
-
-		return expenses.map(e => {
+		return Promise.all(expenses.map(async (e) => {
+			const paidByGroupMember = await this.groupMemberService.getGroupMemberById(e.groupMemberId);
 			return {
 				id: e.id,
 				name: e.name,
 				createdAt: e.createdAt,
 				totalAmount: e.totalAmount,
-				paidByGroupMember: expenseSplitDtos.find(e1 => e1.member.id === e.groupMemberId)?.member,
+				paidByGroupMember: paidByGroupMember, // This will be set later
 				expenseSplits: expenseSplits.filter(e1 => e1.expenseId === e.id).map(e1 => this.mapToDto(e1))
 			} as ExpenseDto;
-		});
+		}));
 	}
 
+	async deleteExpense(id: number) {
+		await this.expenseSplitRepository.delete({ expenseId: id })
+		await this.expenseRepository.delete({ id });
+	}
 }

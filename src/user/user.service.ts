@@ -8,6 +8,7 @@ import { Group } from "src/group/entity/group.entity";
 
 @Injectable()
 export class UserService {
+
   async createUser(createUser: CreateUserDto){
     await this.userRepository.save(createUser);
   }
@@ -34,5 +35,11 @@ export class UserService {
     .select(['user.id as id', 'user.name as name', 'user.email as email'])
     .getRawMany<UserDto>();
 
+  }
+
+  async updateUser(updatedUser: Omit<User, 'email'| 'groupMembers'> ) {
+    await this.userRepository.update(updatedUser.id, {
+      name: updatedUser.name
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common/decorators";
+import { Body, Controller, Get, HttpCode, Param, Patch, Post } from "@nestjs/common/decorators";
 import { UserService } from "./user.service";
 import { CreateUserDto, UserDto } from "./dto/user.dto";
 import { NotFoundException } from "@nestjs/common/exceptions";
@@ -32,5 +32,11 @@ export class UserController {
   @Get('not/group/:id')
   async getUserNotGroupMember(@Param('id') id: number): Promise<UserDto[]> {
     return  this.appService.getUserNotGroupMember(id);
+  }
+
+  @Patch(':id')
+  @HttpCode(204)
+  async updateUser(@Param('id') id: number, @Body() updatedUser: Omit<CreateUserDto, 'email' >) {
+    await this.appService.updateUser({id: id, ...updatedUser});
   }
 }

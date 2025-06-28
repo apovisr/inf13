@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException, Post, HttpCode, Body } from "@nestjs/common";
+import { Controller, Get, Param, NotFoundException, Post, HttpCode, Body, Delete } from "@nestjs/common";
 import { ExpenseService } from "./expense.service";
 import { CreateExpenseDto, ExpenseDto } from "./dto/expense.dto";
 
@@ -23,9 +23,15 @@ export class ExpenseController {
 		}
 	}
 
+	@Delete(':id')
+	@HttpCode(201)
+	async deleteExpense(@Param('id') id: number): Promise<void> {
+		await this.expenseService.deleteExpense(id)
+	}
+
 
 	@Get('/group/:id')
 	async getExpensesByGroupId(@Param('id') id: number): Promise<ExpenseDto[]> {
-		return this.expenseService.getExpensesByGroupId(id);
+		return await this.expenseService.getExpensesByGroupId(id);
 	}
 }
