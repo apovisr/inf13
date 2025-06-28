@@ -1,0 +1,56 @@
+name: Construir y Desplegar a AWS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: main
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+
+    steps:
+      - name: Recuperar el código
+        uses: actions/checkout@v3
+
+      - name: Configurar las credenciales AWS
+        run: |
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+          aws configure set aws_session_token "$AWS_SESSION_TOKEN"
+          aws configure set region "$AWS_REGION"
+
+      - name: Verificar las credenciales
+        run: aws sts get-caller-identity
+
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+
+      - name: Inicializar Terraform
+        run: terraform init -backend-config "bucket=${{ vars.BUCKET }}" -backend-config "dynamodb_table=${{ vars.LOCKS }}"
+        working-directory: infra
+
+      - name: Aplicar Terraform
+        run: |
+          terraform destroy \
+            -var="id_cuenta_aws=${{ vars.AWS_ACCOUNT_ID }}" \
+            -var="rol_lab_arn=${{ vars.ROL_LAB_ARN }}" \
+            -var="nombre_cluster_ecs=${{ vars.NOMBRE_CLUSTER }}" \
+            -var="familia_tarea_ecs=${{ vars.FAMILIA_TAREA_ECS }}" \
+            -var="nombre_repo_ecr=${{ vars.NOMBRE_REPO_ECR }}" \
+            -var="servidor_base_datos=${{ vars.SERVIDOR_BASE_DATOS }}" \
+            -var="puerto_base_datos=${{ vars.PUERTO_BASE_DATOS }}" \
+            -var="nombre_base_datos=${{ vars.NOMBRE_BASE_DATOS }}" \
+            -var="usuario_base_datos=${{ vars.USUARIO_BASE_DATOS }}" \
+            -var="contrasenha_base_datos=${{ secrets.CONTRASENHA_BASE_DATOS }}" \
+            -var="nombre_servicio_ecs=${{ vars.NOMBRE_SERVICIO }}" \
+            -auto-approve
+        working-directory: infra
