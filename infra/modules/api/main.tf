@@ -227,7 +227,7 @@ resource "aws_apigatewayv2_route" "users_post" {
 }
 
 
-resource "aws_apigatewayv2_route" "users_post" {
+resource "aws_apigatewayv2_route" "users_post_not_group" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "GET /users/not/group/{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.users_integration_no_group_id.id}"
