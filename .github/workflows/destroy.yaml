@@ -1,4 +1,4 @@
-name: Construir y Desplegar a AWS
+name: Destroy Infrastructure
 
 on:
   workflow_dispatch:
