@@ -65,6 +65,14 @@ resource "aws_apigatewayv2_integration" "group_members_integration" {
   payload_format_version = "1.0"
 }
 
+resource "aws_apigatewayv2_integration" "group_members_integration_by_id" {
+  api_id                 = aws_apigatewayv2_api.http_api.id
+  integration_type       = "HTTP_PROXY"
+  integration_uri        = "http://${var.load_balancer_url}/api/group-members/{proxy}"
+  integration_method     = "ANY"
+  payload_format_version = "1.0"
+}
+
 resource "aws_apigatewayv2_integration" "settlements_integration_no_parameters" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "HTTP_PROXY"
@@ -194,12 +202,18 @@ resource "aws_apigatewayv2_route" "group_members_post" {
   target    = "integrations/${aws_apigatewayv2_integration.group_members_integration_no_parameters.id}"
 }
 
-resource "aws_apigatewayv2_route" "producto_get_by_group" {
+resource "aws_apigatewayv2_route" "group_members_get_by_group" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "GET /group-members/group/{proxy+}"
   target    = "integrations/${aws_apigatewayv2_integration.group_members_integration.id}"
 }
 
+
+resource "aws_apigatewayv2_route" "group_members_delete_by_id" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "DELETE /group-members/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.group_members_integration_by_id.id}"
+}
 
 #########################################
 # Routes - Settlements
