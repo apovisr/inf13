@@ -23,7 +23,7 @@ export class ExpenseService {
 
 	async createExpense(createExpenseDto: CreateExpenseDto) {
 		const groupMemberIds = createExpenseDto.expenseSplits.map(e => e.groupMemberId)
-		
+
 		await this.groupMemberService.validateGroupMembers(groupMemberIds, createExpenseDto.groupId);
 
 		await this.expenseRepository.manager.transaction(

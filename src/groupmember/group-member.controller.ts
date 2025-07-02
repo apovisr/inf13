@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common/decorators";
+import { Body, Controller, Delete, Get, HttpCode, Param, Post } from "@nestjs/common/decorators";
 import { GroupMemberService } from "./group-member.service";
 import { CreateGroupMemberDto, GroupMemberDto } from "./dto/group-member.dto";
 
@@ -14,7 +14,14 @@ export class GroupMemberController {
   @Post()
   @HttpCode(201)
   async createGroupMember(@Body() createGroupMember: CreateGroupMemberDto) {
-    this.groupMemberService.createGroupMember(createGroupMember);
+    await this.groupMemberService.createGroupMember(createGroupMember);
+  }
+
+
+  @Delete('/:id')
+  @HttpCode(204)
+  async deleteGroupMember(@Param('id') id: number) {
+    await this.groupMemberService.deleteGroupMember(id);
   }
 
 }

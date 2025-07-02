@@ -20,7 +20,7 @@ export class GroupController {
   @Post()
   @HttpCode(201)
   async createGroup(@Body() createGroup: CreateGroupDto) {
-    this.appService.createGroup(createGroup);
+    await this.appService.createGroup(createGroup);
   }
 
   @Get()
