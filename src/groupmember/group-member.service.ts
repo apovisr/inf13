@@ -62,13 +62,23 @@ export class GroupMemberService {
   async deleteGroupMember(id: number) {
     this.settlementRepository.delete({ fromGroupMemberId: id });
     this.settlementRepository.delete({ toGroupMemberId: id });
-    await this.expenseSplitRepository.delete({ groupMemberId: id });
+
+    const expenseSplits = await this.expenseSplitRepository.findBy({ groupMemberId: id });
+    const expenseIdsBySplit = expenseSplits.map(e => e.expenseId);
+    
+
+    await Promise.all(expenseIdsBySplit.map(async id => {
+      await this.expenseSplitRepository.delete({ expenseId: id });
+      await this.expenseRepository.delete({ id: id });
+    }));
+
     const expenses = await this.expenseRepository.findBy({ groupMemberId: id });
     const expenseIds = expenses.map(e => e.id);
-    Promise.all(expenseIds.map(async expenseId => {
+    await Promise.all(expenseIds.map(async expenseId => {
       await this.expenseSplitRepository.delete({ expenseId: expenseId });
+      await this.expenseRepository.delete({ id: expenseId });
     }));
-    await this.expenseRepository.delete({ groupMemberId: id });
+
     await this.groupMemberRepository.delete(id);
   }
 }
