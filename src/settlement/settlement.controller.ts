@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from "@nestjs/common/decorators";
+import { Body, Controller, Delete, Get, HttpCode, Param, Post } from "@nestjs/common/decorators";
 import { SettlementService } from "./settlement.service";
 import { CreateSettlementDto, SettlementDto } from "./dto/settlement.dto";
 import { NotFoundException } from "@nestjs/common/exceptions";
@@ -25,5 +25,10 @@ export class SettlementController {
   @Get('group/:id')
   async getSettlementByGroupId(@Param('id') id: number): Promise<SettlementDto[]> {
     return this.settlementService.getSettlementByGroupId(id);
+  }
+
+  @Delete(':id')
+  async deleteSettlement(@Param('id') id: number): Promise<void> {
+    await this.settlementService.deleteSettlement(id);
   }
 }

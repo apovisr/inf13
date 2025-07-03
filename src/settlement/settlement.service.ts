@@ -10,7 +10,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 @Injectable()
 export class SettlementService {
 
-
   constructor(
     @InjectRepository(Settlement)
     private settlementRepository: Repository<Settlement>,
@@ -76,4 +75,9 @@ export class SettlementService {
 
     return settlements.map(e => this.mapperToDto(e));
   }
+
+  async deleteSettlement(id: number) {
+    await this.settlementRepository.delete({ id });
+  }
+
 }

@@ -230,6 +230,12 @@ resource "aws_apigatewayv2_route" "settlements_get_by_id" {
   target    = "integrations/${aws_apigatewayv2_integration.settlements_integration.id}"
 }
 
+resource "aws_apigatewayv2_route" "settlements_delete_by_id" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "DELETE /settlements/{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.settlements_integration.id}"
+}
+
 resource "aws_apigatewayv2_route" "settlements_post" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "GET /settlements/group/{proxy+}"
